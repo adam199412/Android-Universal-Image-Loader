@@ -1,11 +1,15 @@
 package com.nostra13.universalimageloader.core.download;
 
+import android.app.Activity;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
+
+import java.io.InputStream;
 
 @RunWith(RobolectricTestRunner.class)
 public class BaseImageDownloaderTest {
@@ -64,5 +68,12 @@ public class BaseImageDownloaderTest {
 		Scheme result = Scheme.ofUri(uri);
 		Scheme expected = Scheme.UNKNOWN;
 		Assertions.assertThat(result).isEqualTo(expected);
+	}
+
+	@Test
+	public void testUserInfoUrl() throws Exception {
+		String uri = "http://test_account:test12345@pwdpic.heliohost.org/password_picture/example.jpg";
+		InputStream picture = new BaseImageDownloader(new Activity()).getStream(uri, null);
+		Assertions.assertThat(picture).isNotNull();
 	}
 }
