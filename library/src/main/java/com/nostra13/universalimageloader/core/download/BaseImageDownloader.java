@@ -25,7 +25,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.webkit.MimeTypeMap;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ContentLengthInputStream;
 import com.nostra13.universalimageloader.utils.IoUtils;
@@ -113,6 +115,9 @@ public class BaseImageDownloader implements ImageDownloader {
 	protected InputStream getStreamFromNetwork(String imageUri, Object extra) throws IOException {
 		HttpURLConnection conn = createConnection(imageUri, extra);
 
+		// Checks if imageUri has userinfo and if it does, handles it.
+		setCredentials(conn, extra);
+
 		int redirectCount = 0;
 		while (conn.getResponseCode() / 100 == 3 && redirectCount < MAX_REDIRECT_COUNT) {
 			conn = createConnection(conn.getHeaderField("Location"), extra);
@@ -161,6 +166,26 @@ public class BaseImageDownloader implements ImageDownloader {
 		conn.setConnectTimeout(connectTimeout);
 		conn.setReadTimeout(readTimeout);
 		return conn;
+	}
+
+	/**
+	 * Checks for userinfo "username:password" and if supplied, encodes it for basic authentication
+	 *
+	 * @param conn  HttpURLConnection object to modify
+	 * @param extra Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+	 *              DisplayImageOptions.extraForDownloader(Object)}; can be null
+	 * @return {@linkplain HttpURLConnection Connection} for incoming URL. Connection isn't established so it still configurable.
+	 * @throws IOException if some I/O error occurs during network request or if no InputStream could be created for
+	 *                     URL.
+	 */
+	@TargetApi(8)
+	private void setCredentials(HttpURLConnection conn, Object extra) throws IOException {
+		String userinfo = conn.getURL().getUserInfo();
+		if (userinfo != null) {
+			String basicAuth = "Basic " + Base64.encodeToString(userinfo.getBytes(), Base64.NO_WRAP);
+			conn.setRequestProperty("Authorization", basicAuth);
+		}
+		return;
 	}
 
 	/**
