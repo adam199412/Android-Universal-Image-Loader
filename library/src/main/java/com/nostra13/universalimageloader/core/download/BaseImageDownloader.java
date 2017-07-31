@@ -175,7 +175,6 @@ public class BaseImageDownloader implements ImageDownloader {
 	 * @param conn  HttpURLConnection object to modify
 	 * @param extra Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
 	 *              DisplayImageOptions.extraForDownloader(Object)}; can be null
-	 * @return {@linkplain HttpURLConnection Connection} for incoming URL. Connection isn't established so it still configurable.
 	 * @throws IOException if some I/O error occurs during network request or if no InputStream could be created for
 	 *                     URL.
 	 */
