@@ -71,8 +71,29 @@ public class BaseImageDownloaderTest {
 	}
 
 	@Test
-	public void testUserInfoUrl() throws Exception {
+	public void testUserInfoUrl1() throws Exception {
 		String uri = "http://test_account:test12345@pwdpic.heliohost.org/password_picture/example.jpg";
+		InputStream picture = new BaseImageDownloader(new Activity()).getStream(uri, null);
+		Assertions.assertThat(picture).isNotNull();
+	}
+
+	@Test
+	public void testUserInfoUrl2() throws Exception {
+		String uri = "http://test_account1:test67890@pwdpic.heliohost.org/password_picture/%21%40%23%24%25%5E%26%2A%28%29.png";
+		InputStream picture = new BaseImageDownloader(new Activity()).getStream(uri, null);
+		Assertions.assertThat(picture).isNotNull();
+	}
+
+	@Test
+	public void testUserInfoUrl3() throws Exception {
+		String uri = "http://test_account1:test67890@pwdpic.heliohost.org/password_picture/example1.png";
+		InputStream picture = new BaseImageDownloader(new Activity()).getStream(uri, null);
+		Assertions.assertThat(picture).isNotNull();
+	}
+
+	@Test
+	public void testUserInfoUrl4() throws Exception {
+		String uri = "http://test_account:test12345@pwdpic.heliohost.org/password_picture/example2.bmp";
 		InputStream picture = new BaseImageDownloader(new Activity()).getStream(uri, null);
 		Assertions.assertThat(picture).isNotNull();
 	}
