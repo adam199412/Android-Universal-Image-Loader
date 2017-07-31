@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 
 /**
  * Provides retrieving of {@link InputStream} of image by URI from network or file system or app resources.<br />
@@ -180,9 +181,10 @@ public class BaseImageDownloader implements ImageDownloader {
 	 */
 	@TargetApi(8)
 	private void setCredentials(HttpURLConnection conn, Object extra) throws IOException {
-		String userinfo = conn.getURL().getUserInfo();
-		if (userinfo != null) {
-			String basicAuth = "Basic " + Base64.encodeToString(userinfo.getBytes(), Base64.NO_WRAP);
+		String userInfo = conn.getURL().getUserInfo();
+		if (userInfo != null) {
+			String basicAuth = "Basic " + Base64.encodeToString(URLDecoder.decode(userInfo, "UTF-8")
+					.getBytes("UTF-8"), Base64.NO_WRAP);
 			conn.setRequestProperty("Authorization", basicAuth);
 		}
 		return;
