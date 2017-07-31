@@ -187,7 +187,6 @@ public class BaseImageDownloader implements ImageDownloader {
 					.getBytes("UTF-8"), Base64.NO_WRAP);
 			conn.setRequestProperty("Authorization", basicAuth);
 		}
-		return;
 	}
 
 	/**
